@@ -49,7 +49,7 @@ defmodule PhxFontawesome.MixProject do
       {:ex_doc, "~> 0.35", only: [:dev, :test], runtime: false},
       {:jason, "~> 1.4", only: [:dev, :test]},
       {:phoenix, "~> 1.7"},
-      {:phoenix_live_view, "~> 1.0"},
+      {:phoenix_live_view, "~> 0.20 or ~> 1.0"},
       {:phx_component_helpers, "~> 1.4"}
     ]
   end
