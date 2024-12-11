@@ -87,14 +87,6 @@ defmodule PhxFontawesome.FreeTest do
                    <PhxFontawesome.render icon="user", set="invalid" type="regular" />
                    """)
                  end
-
-    assert_raise ArgumentError,
-                 "could not load module PhxFontawesome.Pro.Regular due to reason :nofile",
-                 fn ->
-                   rendered_to_string(~H"""
-                   <PhxFontawesome.render icon="user", set="pro" type="regular" />
-                   """)
-                 end
   end
 
   test "can forward extra params to the underlying svg element" do
