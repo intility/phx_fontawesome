@@ -27,14 +27,14 @@ end
 
 **Step 1 - Install desired font set**
 
-In your Phoenix project, install desired font set using `npm` or `yarn`. Please consult the Font Awesome
+Install desired font set. Please consult the Font Awesome
 [documentation](https://fontawesome.com/docs/web/setup/packages) if you run into any trouble here.
 
 ```shell
 $ cd assets/
-$ yarn add @fortawesome/fontawesome-free
+$ npm install --prefix assets @fortawesome/fontawesome-free
 # or
-$ yarn add @fortawesome/fontawesome-pro     # needs a license
+$ npm install --prefix assets  @fortawesome/fontawesome-pro     # needs a license
 ```
 
 **Step 2 - Choose font set types to generate**

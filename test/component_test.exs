@@ -74,7 +74,7 @@ defmodule PhxFontawesome.FreeTest do
       """)
 
     assert html =~ "<svg class="
-    assert html =~ "icon=\"user\" set=\"free\" type=\"regular\""
+    assert html =~ "set=\"free\" type=\"regular\" icon=\"user\""
   end
 
   test "raises error when trying to render a non-existing icon" do
