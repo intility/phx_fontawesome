@@ -1,7 +1,7 @@
 defmodule PhxFontawesome.MixProject do
   use Mix.Project
 
-  @version "1.2.3"
+  @version "1.3.0"
   @source_url "https://github.com/Intility/phx_fontawesome"
 
   def project do
