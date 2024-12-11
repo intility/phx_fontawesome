@@ -3,6 +3,7 @@ defmodule Mix.Tasks.PhxFontawesome.Generate do
   use Mix.Task
   require Logger
 
+  @fontsets ~w(fontawesome-free fontawesome-pro)
   @src_path "./assets/node_modules/@fortawesome"
   @dest_path "./deps/phx_fontawesome/lib/phx_fontawesome"
 
@@ -11,6 +12,7 @@ defmodule Mix.Tasks.PhxFontawesome.Generate do
     sets = Application.get_env(:phx_fontawesome, :types) || ["regular", "solid"]
 
     with {:ok, name} <- File.ls(@src_path),
+         name <- Enum.filter(name, &Enum.member?(@fontsets, &1)),
          fontsets <- Enum.zip(name, Enum.map(name, &list_fontsets(&1, sets))) do
       for {namespace, fontset} <- fontsets do
         build_context_module(namespace)
