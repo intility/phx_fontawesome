@@ -42,9 +42,8 @@ jobs:
           mix local.hex --force
           mix deps.get
       - name: Install Fontawesome
-        run: |
-          cd assets
-          yarn install
+        working-directory: assets
+        run: npm ci
       - name: Generate Phoenix Components
         run: |
           mix phx_fontawesome.generate
