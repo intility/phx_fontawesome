@@ -28,25 +28,27 @@ jobs:
         with:
           elixir-version: ${{ matrix.elixir }}
           otp-version: ${{ matrix.otp }}
-      - name: Restore dependencies cache
-        uses: actions/cache@v3
-        id: dependency-cache
+      - name: Setup Node
+        uses: actions/setup-node@v4
         with:
-          path: deps
-          key: ${{ runner.os }}-mix-${{ hashFiles('**/mix.lock') }}
-          restore-keys: ${{ runner.os }}-mix-
-      - name: Install dependencies
-        if: steps.dependency-cache.outputs.cache-hit != 'true'
-        run: |
-          mix local.rebar --force
-          mix local.hex --force
-          mix deps.get
-      - name: Install Fontawesome
-        working-directory: assets
+          node-version: "lts/*"
+          registry-url: https://npm.intility.com
+          cache: npm
+          cache-dependency-path: "**/package-lock.json"
+      - name: Install Node dependencies
         run: npm ci
-      - name: Generate Phoenix Components
-        run: |
-          mix phx_fontawesome.generate
-          mix compile
+        working-directory: assets
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_INTILITY_COM_TOKEN }}
+      - name: Install dependencies
+        uses: team-alembic/staple-actions/actions/mix-deps-get@main
+      - name: Generate Phoenix components
+        uses: team-alembic/staple-actions/actions/mix-task@main
+        with:
+          mix-env: test
+          task: phx_fontawesome.generate
       - name: Run test suite
-        run: mix test
+        uses: team-alembic/staple-actions/actions/mix-task@main
+        with:
+          mix-env: test
+          task: test
