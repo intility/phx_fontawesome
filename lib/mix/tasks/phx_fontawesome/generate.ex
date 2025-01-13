@@ -22,7 +22,7 @@ defmodule Mix.Tasks.PhxFontawesome.Generate do
       {:error, :enoent} ->
         Logger.error(
           "Directory #{Path.absname(@src_path)} does not exist.\n" <>
-            "Please install desired font set using ie. 'yarn add @fortawesome/fontawesome-free' " <>
+            "Please install desired font set using ie. 'npm install @fortawesome/fontawesome-free' " <>
             "from the assets directory."
         )
     end
