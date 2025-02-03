@@ -35,7 +35,7 @@ defmodule PhxFontawesome.MixProject do
     ]
   end
 
-  defp elixirc_paths(:test), do: ["lib", "test/support", "deps/phx_fontawesome/lib"]
+  defp elixirc_paths(:test), do: ["lib", "test/support", "deps/phx_fontawesome"]
   defp elixirc_paths(_), do: ["lib"]
 
   def application do
