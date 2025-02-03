@@ -10,14 +10,21 @@ defmodule Mix.Tasks.PhxFontawesome.Generate do
   @shortdoc "Convert source SVG files into Phoenix components."
   def run(_) do
     sets = Application.get_env(:phx_fontawesome, :types) || ["regular", "solid"]
+    {:ok, _pid} = Task.Supervisor.start_link(name: PhxFontawesome.TaskSupervisor)
 
     with {:ok, name} <- File.ls(@src_path),
          name <- Enum.filter(name, &Enum.member?(@fontsets, &1)),
          fontsets <- Enum.zip(name, Enum.map(name, &list_fontsets(&1, sets))) do
-      for {namespace, fontset} <- fontsets do
+      Enum.map(fontsets, fn {namespace, fontset} ->
         build_context_module(namespace)
-        Enum.each(fontset, &build_module(namespace, &1))
-      end
+
+        Enum.map(fontset, fn f ->
+          Task.Supervisor.async(PhxFontawesome.TaskSupervisor, fn ->
+            build_module(namespace, f)
+          end)
+        end)
+        |> Task.await_many(:infinity)
+      end)
     else
       {:error, :enoent} ->
         Logger.error(
@@ -49,6 +56,8 @@ defmodule Mix.Tasks.PhxFontawesome.Generate do
     end
   end
 
+  defp fontset_name(fontset), do: String.capitalize(Path.basename(fontset))
+
   @spec list_directory(directory :: String.t()) :: {String.t(), [String.t()]}
   defp list_directory(directory) do
     files =
@@ -67,7 +76,7 @@ defmodule Mix.Tasks.PhxFontawesome.Generate do
   defp build_module(namespace, {fontset, files}) when is_list(files) do
     module_name =
       with namespace_name <- namespace_name(namespace),
-           fontset_name <- Path.basename(fontset) |> String.capitalize(),
+           fontset_name <- fontset_name(fontset),
            do: "Phx#{namespace_name}.#{fontset_name}"
 
     file = """
@@ -77,14 +86,14 @@ defmodule Mix.Tasks.PhxFontawesome.Generate do
 
       ## Example
 
-          <PhxFontawesome.Free.Solid.angle_up />
-          <PhxFontawesome.Free.Regular.render icon="angle_up" />
+          <PhxFontawesome.#{fontset_name(fontset)}.Solid.angle_up />
+          <PhxFontawesome.#{fontset_name(fontset)}.Regular.render icon="angle_up" />
 
           <!-- override default classes  -->
-          <PhxFontawesome.Free.Solid.angle_up class="my-custom-class" />
+          <PhxFontawesome.#{fontset_name(fontset)}.Solid.angle_up class="my-custom-class" />
 
           <!-- pass extra properties -->
-          <PhxFontawesome.Free.Solid.angle_up title="Font Awesome angle-up icon" />
+          <PhxFontawesome.#{fontset_name(fontset)}.Solid.angle_up title="Font Awesome angle-up icon" />
 
       \"\"\"
       use Phoenix.Component
@@ -103,6 +112,7 @@ defmodule Mix.Tasks.PhxFontawesome.Generate do
 
     dest_path = Path.join([dest_path(), String.replace(namespace, "-", "_")])
     dest_file = Path.join(dest_path, "#{Path.basename(fontset)}.ex")
+
     if !File.exists?(dest_path), do: File.mkdir_p!(dest_path)
     if File.exists?(dest_file), do: File.rm!(dest_file)
 
@@ -115,7 +125,8 @@ defmodule Mix.Tasks.PhxFontawesome.Generate do
     response =
       Enum.map(files, &Path.join(fontset, &1))
       |> Task.async_stream(&stream_file/1)
-      |> Enum.map(fn {:ok, stream} ->
+      |> Enum.map(fn {:ok, %{enum: %{path: path}} = stream} ->
+        IO.puts(IO.ANSI.format([:green, "Processing #{path}"]))
         Stream.run(Stream.into(stream, output_stream))
       end)
 
