@@ -252,6 +252,7 @@ defmodule Mix.Tasks.PhxFontawesome.Generate do
   defp ensure_valid_function_name("7"), do: "seven"
   defp ensure_valid_function_name("8"), do: "eight"
   defp ensure_valid_function_name("9"), do: "nine"
+  defp ensure_valid_function_name("11ty"), do: "eleven_ty"
   defp ensure_valid_function_name("42_group"), do: "fourty_two_group"
   defp ensure_valid_function_name("500px"), do: "five_hundred_px"
   defp ensure_valid_function_name("360_degrees"), do: "three_sixty_degrees"
