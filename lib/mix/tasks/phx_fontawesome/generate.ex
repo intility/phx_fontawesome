@@ -235,7 +235,9 @@ defmodule Mix.Tasks.PhxFontawesome.Generate do
   defp class_for("eight"), do: "fa-8"
   defp class_for("nine"), do: "fa-9"
   defp class_for("double_zero"), do: "fa-00"
+  defp class_for("eleven_ty"), do: "fa-11ty"
   defp class_for("fourty_two_group"), do: "fa-42-group"
+  defp class_for("one_hundred"), do: "fa-100"
   defp class_for("five_hundred_px"), do: "fa-500px"
   defp class_for("three_sixty_degrees"), do: "fa-360-degrees"
   defp class_for(name), do: "fa-#{String.replace(name, "_", "-")}"
@@ -254,6 +256,7 @@ defmodule Mix.Tasks.PhxFontawesome.Generate do
   defp ensure_valid_function_name("9"), do: "nine"
   defp ensure_valid_function_name("11ty"), do: "eleven_ty"
   defp ensure_valid_function_name("42_group"), do: "fourty_two_group"
+  defp ensure_valid_function_name("100"), do: "one_hundred"
   defp ensure_valid_function_name("500px"), do: "five_hundred_px"
   defp ensure_valid_function_name("360_degrees"), do: "three_sixty_degrees"
   defp ensure_valid_function_name(name), do: name

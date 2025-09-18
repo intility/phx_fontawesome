@@ -5,6 +5,10 @@
 
 ![pipeline status](https://github.com/Intility/phx_fontawesome/actions/workflows/elixir.yml/badge.svg?event=push)
 
+> [!WARNING]
+> This project is discontinued due to no longer being used in any active project.
+> Please reach out if you wish to take over maintainance. 
+
 ## About
 
 A simple Mix task that generates Phoenix Components from Font Awesome SVG files. Documentation is available
